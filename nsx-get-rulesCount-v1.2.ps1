@@ -271,7 +271,7 @@ Process{
                         }
 
                         # If we see a line that looks like a fw export, grab that and run vsipioctl on it:
-                        if ($item -match '(?<=name: )(.*sfw.2)') {
+                        if ($item -match '(?<=name:\s+)(.*\.([2,4-9]|1[0-5]))$') {
 
                             $vmNic = $matches[0]
                             write-ToLog "Found dfw ruleset on VM $vmName via vnic '$($vmNic)'" -entryType SUCCESS
