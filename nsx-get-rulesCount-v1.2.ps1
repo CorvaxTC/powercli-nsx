@@ -256,9 +256,9 @@ Process{
                write-ToLog "Retrieving host dvfilters and processing the information..."
                $dvflist = Invoke-SSHCommand -SSHSession $ssh -Command "summarize-dvfilter"
     
-               if($dvflist.Output.Count -ge 1){
+               if (($dvflist.Output | % {$_ -match '(?<=name:\s+)(.*\.([2,4-9]|1[0-5]))$'}) -contains "True") {
               
-                   write-ToLog "Found '$($dvflist.Output.Count)' dvfilters on host '$($vmHost.Name)' that need to be processed."
+                   write-ToLog "Found 1 or more dvfilters on host '$($vmHost.Name)' that need to be processed."
 
                    # Parse each line in the summarize-dvfilter output
                    ForEach ($item in $dvflist.Output) {
@@ -300,7 +300,7 @@ Process{
                     } 
                 }#End for
             }else{
-                write-ToLog "Found no dvfilters on host '$($vmHost.Name)', the host will be skipped."
+                write-ToLog "Host '$($vmHost.Name)' returned no dvfilters, the host will be skipped."
             }
 
                #Test to see if ssh service was currently running.  if not, stop the service.
